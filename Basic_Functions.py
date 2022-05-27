@@ -31,11 +31,37 @@ def parse_fasta(fastas):
             sequence = sequence + lines
 
 
+def fasta_parse(file_path):
+    seq = ""
+    fasta_list = []
+    with open(file_path) as sequences:
+        ident = sequences.readline()[1:].strip()
+        line = sequences.readline()
+        while line != "":
+            if line[0] == ">":
+                fasta_list.append(FASTASequence(seq, ident))
+                ident = line[1:].strip()
+                seq = ""
+                line = sequences.readline()
+            else:
+                seq = seq + line.strip()
+                line = sequences.readline()
+    return fasta_list
+
+
 
 class FASTASequence:
-    def __init__(self, sequence: str, id: str):
-        self.fasta_sequence = sequence
-        self.id = id
+    def __init__(self, fasta_sequence: str, fasta_id: str):
+        self.fasta_sequence = fasta_sequence
+        self.fasta_id = fasta_id
+
+    def __str__(self):
+        return self.fasta_sequence
+
+    def __reversed__(self):
+        return reverse_comp(self.fasta_sequence)
+
+
 
 
 
